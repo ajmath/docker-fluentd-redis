@@ -1,19 +1,19 @@
 FROM fluent/fluentd
-MAINTAINER bpsizemore@gmail.com
+MAINTAINER andrew.j.matheny@gmail.com
 
 USER root
-RUN mkdir /etc/fluent
-ADD fluent.conf /etc/fluent/
+WORKDIR /root/
 
-RUN mkdir /etc/fluent/gems
-ADD gems /etc/fluent/gems
-RUN for gem in $(ls /etc/fluent/gems/); do gem install /etc/fluent/gems/$gem; done
+ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
+ENV GEM_PATH /home/fluent/.gem/ruby/2.3.0
+RUN gem install fluent-plugin-redis-store:0.1.1
+RUN gem install excon:0.46.0
+RUN gem install docker-api:1.29.0
+RUN gem install lru_redux:1.1.0
+RUN gem install fluent-plugin-rename-key:0.2.0
+RUN gem install fluent-plugin-grep:0.3.4
+RUN gem install fluent-plugin-record-modifier:0.4.1
 
+ADD run.sh /
 
-RUN ["gem", "install", "fluent-plugin-redis-store"]
-RUN ["gem", "install", "fluent-plugin-record-reformer", "--no-rdoc", "--no-ri"]
-RUN ["gem", "install", "fluent-plugin-docker_metadata_filter"]
-RUN ["gem", "install", "fluent-plugin-record-modifier"]
-RUN ["gem", "install", "fluent-plugin-rename-key"]
-RUN ["gem", "install", "fluent-plugin-grep"]
-ENTRYPOINT ["fluentd", "-c", "/etc/fluent/fluent.conf", "-qq"]
+ENTRYPOINT ["/run.sh"]
