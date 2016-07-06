@@ -72,7 +72,7 @@ module Fluent
 
     def build_logstash_opts(container_env)
       opts_env = container_env.find { |v| v.start_with?('LOGSTASH_OPTS=') }
-      opts = opts_env == nil || opts_env.length == 0 ? {} : JSON.parse(opts_env[0].split('=').drop(1).join())
+      opts = opts_env == nil {} : JSON.parse(opts_env.split('=').drop(1).join('='))
       @options.each do |k, v|
         opts[k] = v unless container_opts and container_opts[k]
       end
