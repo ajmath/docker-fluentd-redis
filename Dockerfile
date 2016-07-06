@@ -1,6 +1,8 @@
 FROM fluent/fluentd
 MAINTAINER andrew.j.matheny@gmail.com
 
+USER root
+
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 ENV GEM_PATH /home/fluent/.gem/ruby/2.3.0
 
