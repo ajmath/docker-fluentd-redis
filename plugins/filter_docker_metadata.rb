@@ -74,7 +74,7 @@ module Fluent
       opts_env = container_env.find { |v| v.start_with?('LOGSTASH_OPTS=') }
       opts = opts_env == nil ? {} : JSON.parse(opts_env.split('=').drop(1).join('='))
       @options.each do |k, v|
-        opts[k] = v unless container_opts and container_opts[k]
+        opts[k] = v unless opts[k]
       end
       opts.length > 0 ? opts : nil
     end
