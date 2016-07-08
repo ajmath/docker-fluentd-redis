@@ -40,8 +40,6 @@ module Fluent
 
       @cache = LruRedux::ThreadSafeCache.new(@cache_size)
       @container_id_regexp_compiled = Regexp.compile(@container_id_regexp)
-
-      @options = ENV["LOGSTASH_OPTS"] ? JSON.parse(ENV["LOGSTASH_OPTS"]) : {}
     end
 
     def get_record_info(container_id)
@@ -72,11 +70,7 @@ module Fluent
 
     def build_logstash_opts(container_env)
       opts_env = container_env.find { |v| v.start_with?('LOGSTASH_OPTS=') }
-      opts = opts_env == nil ? {} : JSON.parse(opts_env.split('=').drop(1).join('='))
-      @options.each do |k, v|
-        opts[k] = v unless opts[k]
-      end
-      opts.length > 0 ? opts : nil
+      opts_env == nil ? nil : JSON.parse(opts_env.split('=').drop(1).join('='))
     end
 
     def filter_stream(tag, es)
