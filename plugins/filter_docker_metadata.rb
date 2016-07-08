@@ -48,8 +48,9 @@ module Fluent
       begin
         metadata = Docker::Container.get(container_id).info
 
-        image = metadata['Config']['Image']
-        image_tag = image.match(/:.+/) ? image.split(':')[1] : nil
+        image_split = metadata['Config']['Image'].split(':')
+        image = image_split[0]
+        image_tag = image_split.length > 1 ? image_split[1] : nil
         logstash_opts = build_logstash_opts metadata["Config"]["Env"]
 
         record_info = {
